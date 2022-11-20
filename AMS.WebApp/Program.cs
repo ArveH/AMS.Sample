@@ -1,5 +1,6 @@
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.IdentityModel.Tokens.Jwt;
+using AMS.WebApp.Data;
 
 namespace AMS.WebApp;
 
@@ -10,6 +11,8 @@ public class Program
         JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddSingleton(new Globals());
         builder.Services.AddAuthentication(options =>
             {
                 options.DefaultScheme = "Cookies";

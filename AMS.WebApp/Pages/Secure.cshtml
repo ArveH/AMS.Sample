@@ -1,8 +1,15 @@
 ﻿@page
 @model AMS.WebApp.Pages.SecureModel
-@{
-}
 
-<div class="d-flex flex-row">
-    <h3>User: @Model.UserName</h3>
+<div class="d-flex flex-column">
+    <div class="flex-row">
+        <div>
+            <form class="flex-row" method="post">
+                <button type="submit" class="btn btn-info" onclick=""
+                        asp-page="/Secure" asp-page-handler="GetData">
+                    Post Get Data
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
