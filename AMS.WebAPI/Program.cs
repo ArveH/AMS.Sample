@@ -6,7 +6,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        builder.Services.AddAuthentication()
+            .AddJwtBearer("Bearer", options =>
+            {
+                options.Authority = builder.Configuration.GetValue<string>("Auth:Authority");
+                options.Audience = builder.Configuration.GetValue<string>("Auth:ApiName"); ;
+            });
 
         builder.Services.AddControllers();
 

@@ -32,6 +32,9 @@ public class Program
                 options.Scope.Add("profile");
                 options.Scope.Add("email");
                 options.Scope.Add("u4am-public-api");
+                var apiName = builder.Configuration.GetValue<string>("Auth:ApiName");
+                ArgumentException.ThrowIfNullOrEmpty(apiName);
+                options.Scope.Add(apiName);
                 options.SaveTokens = true;
                 var tenantId = builder.Configuration.GetValue<string>("Auth:TenantId");
                 options.Events.OnRedirectToIdentityProvider = context =>
