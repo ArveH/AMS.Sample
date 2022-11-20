@@ -1,6 +1,7 @@
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.IdentityModel.Tokens.Jwt;
 using AMS.WebApp.Data;
+using AMS.WebApp.Pages;
 
 namespace AMS.WebApp;
 
@@ -13,6 +14,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddSingleton(new Globals());
+        builder.Services.AddHttpClient();
         builder.Services.AddAuthentication(options =>
             {
                 options.DefaultScheme = "Cookies";
@@ -40,7 +42,7 @@ public class Program
                     }
                     return Task.CompletedTask;
                 };
-            }); 
+            });
         builder.Services.AddRazorPages(options =>
         {
             options.Conventions.AuthorizePage("/Secure");
