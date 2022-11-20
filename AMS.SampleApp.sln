@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMS.WebApp", "AMS.WebApp\AM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMS.WebAPI", "AMS.WebAPI\AMS.WebAPI.csproj", "{2C695521-E9FB-43D5-BD52-5C8D3E8F9E04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMS.Client", "AMS.Client\AMS.Client.csproj", "{1A29DB7D-AAA4-4B3A-A327-0545C6E1CE1C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{2C695521-E9FB-43D5-BD52-5C8D3E8F9E04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C695521-E9FB-43D5-BD52-5C8D3E8F9E04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C695521-E9FB-43D5-BD52-5C8D3E8F9E04}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1A29DB7D-AAA4-4B3A-A327-0545C6E1CE1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A29DB7D-AAA4-4B3A-A327-0545C6E1CE1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A29DB7D-AAA4-4B3A-A327-0545C6E1CE1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A29DB7D-AAA4-4B3A-A327-0545C6E1CE1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
