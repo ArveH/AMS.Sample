@@ -1,3 +1,4 @@
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace AMS.WebApp;
@@ -18,20 +19,29 @@ public class Program
             .AddOpenIdConnect("oidc", options =>
             {
                 options.Authority = builder.Configuration.GetValue<string>("Auth:Authority");
-
                 options.ClientId = builder.Configuration.GetValue<string>("Auth:ClientId");
                 options.ClientSecret = builder.Configuration.GetValue<string>("Auth:ClientSecret");
                 options.ResponseType = "code";
-
                 options.Scope.Clear();
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
                 options.Scope.Add("email");
                 options.Scope.Add("u4am-public-api");
-
                 options.SaveTokens = true;
+                var tenantId = builder.Configuration.GetValue<string>("Auth:TenantId");
+                options.Events.OnRedirectToIdentityProvider = context =>
+                {
+                    if (context.ProtocolMessage.RequestType == OpenIdConnectRequestType.Authentication)
+                    {
+                        context.ProtocolMessage.AcrValues = $"tenant:{tenantId}";
+                    }
+                    return Task.CompletedTask;
+                };
             }); 
-        builder.Services.AddRazorPages();
+        builder.Services.AddRazorPages(options =>
+        {
+            options.Conventions.AuthorizePage("/Secure");
+        });
 
         var app = builder.Build();
 
