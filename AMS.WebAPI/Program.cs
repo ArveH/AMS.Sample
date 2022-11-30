@@ -1,3 +1,5 @@
+using AMS.WebAPI.Authorization;
+
 namespace AMS.WebAPI;
 
 public class Program
@@ -6,6 +8,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("Reader", policy =>
+                policy.Requirements.Add(new ReaderRequirement()));
+        });
         builder.Services.AddAuthentication()
             .AddJwtBearer("Bearer", options =>
             {
@@ -17,13 +24,8 @@ public class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
-
         app.MapControllers();
 
         app.Run();
