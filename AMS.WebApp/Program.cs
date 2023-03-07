@@ -2,6 +2,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.IdentityModel.Tokens.Jwt;
 using AMS.WebApp.Data;
 using AMS.WebApp.Pages;
+using Microsoft.IdentityModel.Logging;
 
 namespace AMS.WebApp;
 
@@ -9,6 +10,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        IdentityModelEventSource.ShowPII = true;
         JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
         var builder = WebApplication.CreateBuilder(args);
@@ -20,13 +22,14 @@ public class Program
                 options.DefaultScheme = "Cookies";
                 options.DefaultChallengeScheme = "oidc";
             })
-            .AddCookie("Cookies")
+            .AddCookie("Cookies", options => options.Cookie.Name = "AMS.WebApp")
             .AddOpenIdConnect("oidc", options =>
             {
                 options.Authority = builder.Configuration.GetValue<string>("Auth:Authority");
                 options.ClientId = builder.Configuration.GetValue<string>("Auth:ClientId");
                 options.ClientSecret = builder.Configuration.GetValue<string>("Auth:ClientSecret");
                 options.ResponseType = "code";
+
                 options.Scope.Clear();
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
@@ -35,6 +38,8 @@ public class Program
                 var apiName = builder.Configuration.GetValue<string>("Auth:ApiName");
                 ArgumentException.ThrowIfNullOrEmpty(apiName);
                 options.Scope.Add(apiName);
+
+                options.GetClaimsFromUserInfoEndpoint = true;
                 options.SaveTokens = true;
                 var tenantId = builder.Configuration.GetValue<string>("Auth:TenantId");
                 options.Events.OnRedirectToIdentityProvider = context =>
