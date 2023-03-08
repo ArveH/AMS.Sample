@@ -1,4 +1,5 @@
 using AMS.WebAPI.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AMS.WebAPI;
 
@@ -13,11 +14,13 @@ public class Program
             options.AddPolicy("Reader", policy =>
                 policy.Requirements.Add(new ReaderRequirement()));
         });
+        builder.Services.AddSingleton<IAuthorizationHandler, ReaderHandler>();
+
         builder.Services.AddAuthentication()
             .AddJwtBearer("Bearer", options =>
             {
                 options.Authority = builder.Configuration.GetValue<string>("Auth:Authority");
-                options.Audience = builder.Configuration.GetValue<string>("Auth:ApiName"); ;
+                options.Audience = builder.Configuration.GetValue<string>("Auth:ApiName");
             });
 
         builder.Services.AddControllers();
