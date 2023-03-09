@@ -1,8 +1,7 @@
+using AMS.WebApp.Data;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.IdentityModel.Tokens.Jwt;
-using AMS.WebApp.Data;
-using AMS.WebApp.Pages;
-using Microsoft.IdentityModel.Logging;
 
 namespace AMS.WebApp;
 
@@ -14,6 +13,10 @@ public class Program
         JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
         var builder = WebApplication.CreateBuilder(args);
+        var logger = LoggerFactory.Create(config =>
+        {
+            config.AddConsole();
+        }).CreateLogger("Program");
 
         builder.Services.AddSingleton(new Globals());
         builder.Services.AddHttpClient();
@@ -42,11 +45,16 @@ public class Program
                 options.GetClaimsFromUserInfoEndpoint = true;
                 options.SaveTokens = true;
                 var tenantId = builder.Configuration.GetValue<string>("Auth:TenantId");
+                var idpName = builder.Configuration.GetValue<string>("Auth:IdpName");
                 options.Events.OnRedirectToIdentityProvider = context =>
                 {
                     if (context.ProtocolMessage.RequestType == OpenIdConnectRequestType.Authentication)
                     {
                         context.ProtocolMessage.AcrValues = $"tenant:{tenantId}";
+                        if (!string.IsNullOrWhiteSpace(idpName))
+                            context.ProtocolMessage.AcrValues += $" loginidp:{idpName}";
+                        logger.LogInformation("Logging in with Tenant: '{TenantId}', Idp: '{IdpName}' and Autority: '{Autority}'",
+                            tenantId, idpName, options.Authority);
                     }
                     return Task.CompletedTask;
                 };
