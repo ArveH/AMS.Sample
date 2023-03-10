@@ -4,16 +4,25 @@ namespace AMS.WebAPI.Authorization;
 
 public class ReaderHandler : AuthorizationHandler<ReaderRequirement>
 {
-    protected override Task HandleRequirementAsync(
-        AuthorizationHandlerContext context, ReaderRequirement requirement)
+    private readonly ILogger<ReaderHandler> _logger;
+
+    public ReaderHandler(ILogger<ReaderHandler> logger)
     {
-        var unit4Role = context.User.Claims.FirstOrDefault(c => c.Type == "u4_role")?.Value;
-        if (string.IsNullOrWhiteSpace(unit4Role))
+        _logger = logger;
+    }
+
+    protected override Task HandleRequirementAsync(
+        AuthorizationHandlerContext context, 
+        ReaderRequirement requirement)
+    {
+        var u4Role = context.User.Claims.FirstOrDefault(c => c.Type == "u4_role")?.Value;
+        if (string.IsNullOrWhiteSpace(u4Role))
         {
-            // The unit4_role claim was not found, so authorization failed
+            _logger.LogError("The u4_role claim was not found, so authorization fails");
             return Task.CompletedTask;
         }
 
+        _logger.LogInformation("User has the '{Role}' role", u4Role);
         context.Succeed(requirement);
         return Task.CompletedTask;
     }
