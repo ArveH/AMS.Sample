@@ -7,7 +7,7 @@ public class ReaderHandler : AuthorizationHandler<ReaderRequirement>
     protected override Task HandleRequirementAsync(
         AuthorizationHandlerContext context, ReaderRequirement requirement)
     {
-        var unit4Role = context.User.Claims.FirstOrDefault(c => c.Type == "unit4_role")?.Value;
+        var unit4Role = context.User.Claims.FirstOrDefault(c => c.Type == "u4_role")?.Value;
         if (string.IsNullOrWhiteSpace(unit4Role))
         {
             // The unit4_role claim was not found, so authorization failed

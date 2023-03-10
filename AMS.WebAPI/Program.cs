@@ -1,4 +1,5 @@
 using AMS.WebAPI.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AMS.WebAPI;
@@ -8,6 +9,10 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        var logger = LoggerFactory.Create(config =>
+        {
+            config.AddConsole();
+        }).CreateLogger("Program");
 
         builder.Services.AddAuthorization(options =>
         {
@@ -21,6 +26,14 @@ public class Program
             {
                 options.Authority = builder.Configuration.GetValue<string>("Auth:Authority");
                 options.Audience = builder.Configuration.GetValue<string>("Auth:ApiName");
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        logger.LogError(context.Exception, "Authentication failed");
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         builder.Services.AddControllers();
@@ -28,6 +41,7 @@ public class Program
         var app = builder.Build();
 
         app.UseHttpsRedirection();
+        app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
 
