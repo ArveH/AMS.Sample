@@ -1,11 +1,10 @@
-using System.Net.Http.Headers;
-using System.Text.Json;
 using AMS.WebApp.Data;
 using AMS.WebApp.Dtos;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using static System.Net.WebRequestMethods;
+using System.Net.Http.Headers;
+using System.Text.Json;
 
 namespace AMS.WebApp.Pages;
 
@@ -73,19 +72,15 @@ public class SecureModel : PageModel
         return Page();
     }
 
-    public IActionResult OnGetLogout()
-    {
-        _logger.LogInformation("Logging out...");
-        return SignOut("Cookies", "oidc");
-    }
-
     private async Task<string?> UpgradeAccessTokenAsync(string accessToken)
     {
         var httpClient = _httpClientFactory.CreateClient();
         httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", accessToken);
         _logger.LogInformation("Upgrading access token...");
-        var response = await httpClient.GetAsync(WebAppConstants.AmsBaseUrl + "/am-token-upgrade/human-involved-flow/" + WebAppConstants.AmsSourceSystem);
+        var response = await httpClient.GetAsync(
+            WebAppConstants.AmsBaseUrl + 
+            "/am-token-upgrade/human-involved-flow/" + WebAppConstants.AmsSourceSystem);
         if (!response.IsSuccessStatusCode)
         {
             var msg = await response.Content.ReadAsStringAsync();
@@ -99,5 +94,11 @@ public class SecureModel : PageModel
 
         var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponseDto>();
         return tokenResponse?.AccessToken;
+    }
+
+    public IActionResult OnGetLogout()
+    {
+        _logger.LogInformation("Logging out...");
+        return SignOut("Cookies", "oidc");
     }
 }
