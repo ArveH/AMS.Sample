@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace AMS.WebApp.Pages;
 
@@ -24,9 +25,12 @@ public class SecureModel : PageModel
     public List<WeatherForecast>? Forecast { get; set; } = new();
     public string? ErrorMsg { get; set; }
 
-    public void OnGet()
+    public async Task<IActionResult> OnGet()
     {
-        _logger.LogInformation("Logged in");
+        var idToken = await HttpContext.GetTokenAsync("id_token");
+        _logger.LogInformation("Logged in. IdToken: {IdToken}",
+            idToken);
+        return Page();
     }
 
     public async Task<IActionResult> OnPostGetData()

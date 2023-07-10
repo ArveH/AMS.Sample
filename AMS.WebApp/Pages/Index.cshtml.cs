@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AMS.WebApp.Pages;
 
@@ -14,6 +13,9 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-
+        if (User.Identity is { IsAuthenticated: false })
+        {
+            _logger.LogInformation("Logged out");
+        }
     }
 }
