@@ -4,4 +4,4 @@ Here is a sample on how to setup authentication and access management using the 
 
 The sample is a .NET 7  ASP.NET Web App and API.
 
-> NOTE: For an explanation of the code, see the documentation found here: <a href="https://thehub.unit4.com/home">https://thehub.unit4.com/home</a>
+> NOTE: For an explanation of the code, see the documentation found here: <a href="https://thehub.unit4.com/home">https://thehub.unit4.com/home</a> --> Platform Services --> Access Management Service (Not Access Management!) --> Developer Guide --> API Quick start
